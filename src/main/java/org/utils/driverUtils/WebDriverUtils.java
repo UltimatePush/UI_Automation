@@ -11,7 +11,9 @@ public class WebDriverUtils {
     private static ThreadLocal<WebDriver> driverObj = new ThreadLocal<>();
 
     public static WebDriver get(){
-        driverInit();
+        if(driverObj.get() == null){
+            driverInit();
+        }
         return driverObj.get();
     }
 
@@ -29,5 +31,12 @@ public class WebDriverUtils {
         driver.manage().window().maximize();
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
         driverObj.set(driver);
+    }
+
+    public static void close(){
+        if(driverObj.get() != null){
+            driverObj.get().quit();
+            driverObj.remove();
+        }
     }
 }
